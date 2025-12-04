@@ -1,0 +1,17 @@
+CRISP-DM Phase 2 & 3: Data Understanding + Preparation Summary
+============================================================
+
+Dataset: Ozone
+- Task: Classification
+- Shape: 2535 samples × 72 features
+- Missing in X: 14938 (8.18%)
+- Missing in y: 0
+- Class distribution:
+0.
+0.0    2462
+1.0      73
+
+------------------------------------------------------------
+Train shape: (1246, 72), Test shape: (312, 72)
+Preprocessor: IQR outlier removal + KNN imputation (no scaling)
+============================================================
