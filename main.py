@@ -1,129 +1,125 @@
-# main.py
-# CRISP-DM Phase 2 & 3 & 4: Data Understanding + Data Preparation + Modeling
+"""
+main.py
+Unified CLI for all DSOs
+Usage: python main.py "Dataset Name" -dso dso1|dso2|dso3
+"""
 
-import os
-import argparse
+import sys
+import importlib
 import pandas as pd
 from data_understanding import load_dataset
-from data_preparation import prepare_data  # type: ignore
-from modeling import train_and_evaluate
+from sklearn.metrics import accuracy_score, r2_score
 
-# Ensure reports folder exists
-os.makedirs("reports", exist_ok=True)
-eda_report_path = "reports/eda_summary.txt"
-model_report_path = "reports/modeling_summary.txt"
+# -----------------------------
+# CLI argument parsing
+# -----------------------------
+if len(sys.argv) < 4 or sys.argv[2] != "-dso":
+    print('Usage: python main.py "Dataset Name" -dso dso1|dso2|dso3')
+    sys.exit(1)
 
-def main():
-    parser = argparse.ArgumentParser(description="CRISP-DM Data Pipeline")
-    parser.add_argument("--dataset", type=str, help="Name of the predefined dataset to load")
-    parser.add_argument("--path", type=str, help="Local CSV/XLS/XLSX dataset path")
-    parser.add_argument("--url", type=str, help="URL to CSV/XLS/XLSX dataset")
-    args = parser.parse_args()
+dataset_name = sys.argv[1]
+dso_name = sys.argv[3]
 
-    # ------------------------------
-    # Step 1: Load dataset
-    # ------------------------------
-    if args.dataset:
-        print(f"\n🔍 Loading dataset: {args.dataset}")
-        data = load_dataset(args.dataset)
-        dataset_name = args.dataset
-    elif args.path or args.url:
-        file_source = args.path if args.path else args.url
-        print(f"\n🔍 Loading dataset from {'URL' if args.url else 'path'}: {file_source}")
-        try:
-            if file_source.endswith(".csv"):
-                df = pd.read_csv(file_source)
-            elif file_source.endswith((".xls", ".xlsx")):
-                df = pd.read_excel(file_source)
-            else:
-                df = pd.read_csv(file_source)  # fallback
-        except Exception as e:
-            print(f"Failed to load dataset: {e}")
-            return
+# -----------------------------
+# Load dataset and print summary
+# -----------------------------
+print(f"[1/4] Loading dataset '{dataset_name}'...")
+dataset = load_dataset(dataset_name)
 
-        # Automatically guess target: last column
-        X = df.iloc[:, :-1]
-        y = df.iloc[:, -1]
-        data = {
-            "dataset_name": file_source,
-            "task_type": "Classification" if y.nunique() < 20 else "Regression",
-            "X": X,
-            "y": y,
-            "target_name": df.columns[-1],
-            "feature_names": X.columns.tolist()
-        }
-        dataset_name = file_source
+# Dataset dict can contain either 'X_train'/'X_test' (DSO1) or 'X'/'y' (DSO2)
+if "X_train" in dataset:
+    X = pd.concat([dataset["X_train"], dataset["X_test"]], axis=0)
+    y = pd.concat([pd.Series(dataset["y_train"]), pd.Series(dataset["y_test"])], axis=0)
+else:
+    X = dataset["X"]
+    y = dataset["y"]
+
+task = dataset["task"]
+
+print(f"  Task: {task}")
+print(f"  Samples: {len(X)}, Features: {X.shape[1]}")
+print("  Missing values per column:")
+print(X.isnull().sum())
+
+# -----------------------------
+# Import DSO modules
+# -----------------------------
+try:
+    prep_module = importlib.import_module(f"{dso_name}.data_preparation")
+    model_module = importlib.import_module(f"{dso_name}.modeling")
+    eval_module = importlib.import_module(f"{dso_name}.evaluation")
+except ModuleNotFoundError:
+    print(f"DSO '{dso_name}' not found.")
+    sys.exit(1)
+
+# -----------------------------
+# Data Preparation
+# -----------------------------
+print(f"[2/4] Running Data Preparation for {dso_name}...")
+prepared = prep_module.run(dataset)
+prepared["task"] = task
+
+# -----------------------------
+# Modeling
+# -----------------------------
+print(f"[3/4] Running Modeling for {dso_name}...")
+model_output = model_module.run(prepared)
+
+# -----------------------------
+# Evaluation
+# -----------------------------
+print(f"[4/4] Running Evaluation for {dso_name}...")
+
+def safe_series(vi_dict):
+    """Convert VI dict to numeric Series, ignore non-numeric"""
+    return pd.Series({k: v for k, v in vi_dict.items() if isinstance(v, (int, float))}).sort_values(ascending=False)
+
+if dso_name == "dso2":
+    # DSO2 returns tuple: (models_dict, vi_dict)
+    if isinstance(model_output, tuple):
+        models_dict, vi_dict = model_output
     else:
-        print("Please provide --dataset, --path, or --url")
-        return
+        vi_dict = model_output
+        models_dict = None
 
-    # ------------------------------
-    # Step 2: Data Understanding
-    # ------------------------------
-    X, y = data["X"], data["y"]
-    task = data["task_type"]
-    n_samples, n_features = X.shape
-    missing_X = X.isnull().sum().sum()
-    missing_y = y.isnull().sum()
+    results = eval_module.run(prepared, vi_dict)
 
-    summary = f"""
-Dataset: {dataset_name}
-- Task: {task}
-- Shape: {n_samples} samples × {n_features} features
-- Missing in X: {missing_X} ({100 * missing_X / (n_samples * n_features):.2f}%)
-- Missing in y: {missing_y}
-"""
-    if task == "Classification":
-        class_dist = y.value_counts()
-        summary += f"- Class distribution:\n{class_dist.to_string()}\n"
-    else:
-        y_stats = y.describe()
-        summary += f"- Target stats:\n{y_stats.to_string()}\n"
+    print("\n=== Evaluation Results ===")
+    for variant, info in results.items():
+        # info can be numeric VI dict or nested dict
+        if isinstance(info, dict) and "vi" in info:
+            vi_series = safe_series(info["vi"])
+            metric = info.get("metric", None)
+        else:
+            vi_series = safe_series(info)
+            metric = None
 
-    print(summary)
-    with open(eda_report_path, "w") as report:
-        report.write("CRISP-DM Phase 2 & 3: Data Understanding + Preparation Summary\n")
-        report.write("=" * 60 + "\n")
-        report.write(summary + "\n")
+        print(f"\nVariant: {variant}")
+        if metric is not None:
+            metric_name = "R²" if task == "regression" else "Accuracy"
+            print(f"Metric ({metric_name}): {metric}")
+        print("Top 10 variables by importance:")
+        print(vi_series.head(10))
 
-    # ------------------------------
-    # Step 3: Data Preparation
-    # ------------------------------
-    print("🔧 Preparing data for modeling...")
-    X_train, X_test, y_train, y_test, preprocessor = prepare_data(data)
+else:
+    # DSO1: single model, evaluation needs informative_features
+    informative_features = [f for f in prepared.get("feature_names", X.columns) if not f.startswith("synthetic_")]
+    results = eval_module.run(prepared, model_output, informative_features=informative_features)
 
-    print(f"- Train shape: {X_train.shape}, Test shape: {X_test.shape}")
-    print(f"- Preprocessor: {preprocessor}")
-    print("\n✅ Data preparation complete.")
+    print("\n=== Evaluation Results ===")
+    metric_name = "Accuracy" if task == "classification" else "R²"
+    print(f"{metric_name}: {results['metric']:.4f}")
+    print(f"Recall@50: {results['recall_at_50']:.4f}")
+    print(f"VI Sparsity: {results['vi_sparsity']:.4f}")
 
-    # Log prep to report
-    with open(eda_report_path, "a") as report:
-        report.write("-" * 60 + "\n")
-        report.write(f"Train shape: {X_train.shape}, Test shape: {X_test.shape}\n")
-        report.write(f"Preprocessor: {preprocessor}\n")
-        report.write("=" * 60 + "\n")
+    vi = results["variable_importance"]
+    real_vars = [f for f in vi.index if not f.startswith("synthetic_")]
+    synthetic_vars = [f for f in vi.index if f.startswith("synthetic_")]
 
-    # ------------------------------
-    # Step 4: Modeling
-    # ------------------------------
-    print("\n🎯 Training models and evaluating performance...")
-    results = train_and_evaluate(data, X_train, X_test, y_train, y_test)
+    print("\nTop 10 Informative (Real) Features:")
+    print(vi[real_vars].head(10))
 
-    for model_name, metrics in results.items():
-        print(f"\nModel: {model_name}")
-        for metric, value in metrics.items():
-            print(f"- {metric}: {value:.4f}")
+    print("\nTop 10 Noise (Synthetic) Features:")
+    print(vi[synthetic_vars].head(10))
 
-    # Log modeling results
-    with open(model_report_path, "w") as f:
-        f.write(f"Dataset: {dataset_name}\n")
-        f.write("="*50 + "\n")
-        for model_name, metrics in results.items():
-            f.write(f"\nModel: {model_name}\n")
-            for metric, value in metrics.items():
-                f.write(f"- {metric}: {value:.4f}\n")
-        f.write("\n Modeling complete.\n")
-
-
-if __name__ == "__main__":
-    main()
+print("\nPipeline completed successfully!")

@@ -1,0 +1,11 @@
+Dataset,n,p,missing
+Breast Cancer,569,30,0
+Boston Housing,505,13,0
+Parkinson,195,23,0
+Sonar,207,60,0
+White Wine,4898,11,0
+Red Wine,1599,11,0
+Parkinson Oxford,5875,21,0
+Ozone,1847,73,0
+Concrete,1030,8,0
+Auto MPG,391,7,0
