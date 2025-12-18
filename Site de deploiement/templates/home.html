@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLT Research Platform - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-styles.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">🌲 RLT Platform</a>
+            <div class="nav-menu">
+                <a href="/" class="nav-link active">Home</a>
+                <a href="/datasets" class="nav-link">Datasets</a>
+                <a href="/insights" class="nav-link">Global Insights</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Reinforcement Learning Trees</h1>
+            <p class="hero-subtitle">Advanced machine learning platform comparing RLT with state-of-the-art ensemble methods</p>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Datasets</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">ML Models</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Features</div>
+                </div>
+            </div>
+            <div class="hero-buttons">
+                <a href="/datasets" class="btn btn-primary btn-lg">
+                    🚀 Start Predicting
+                </a>
+                <a href="/insights" class="btn btn-secondary btn-lg">
+                    📊 View Insights
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container-wide">
+            <h2 class="section-title">Platform Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌲</div>
+                    <h3>RLT Algorithm</h3>
+                    <p>Reinforcement Learning Trees with variable muting, linear splits, and bandit methods for enhanced prediction</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚖️</div>
+                    <h3>Model Comparison</h3>
+                    <p>Compare RLT against Random Forest, Gradient Boosting, ExtraTrees, and Lasso/Ridge regression</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>10 UCI Datasets</h3>
+                    <p>Comprehensive evaluation on real-world datasets from healthcare, housing, and quality prediction</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Real-time Predictions</h3>
+                    <p>Input custom features and get instant predictions from all trained models simultaneously</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Performance Metrics</h3>
+                    <p>Track accuracy, R², MSE, and compare historical model performance across datasets</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Research Platform</h3>
+                    <p>Built for academic research with transparent model evaluation and reproducible results</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Models Section -->
+    <section class="models-section">
+        <div class="container-wide">
+            <h2 class="section-title">Compared Models</h2>
+            <div class="models-grid">
+                <div class="model-card">
+                    <div class="model-badge">⭐ Featured</div>
+                    <h3>RLT Forest</h3>
+                    <ul class="model-features">
+                        <li>✓ Variable Muting (DSO1)</li>
+                        <li>✓ Linear Combination Splits (DSO2)</li>
+                        <li>✓ Bandit Methods (DSO3)</li>
+                        <li>✓ High-dimensional robustness</li>
+                    </ul>
+                </div>
+                <div class="model-card">
+                    <h3>Random Forest</h3>
+                    <ul class="model-features">
+                        <li>✓ Ensemble of decision trees</li>
+                        <li>✓ Bootstrap aggregating</li>
+                        <li>✓ Feature randomness</li>
+                        <li>✓ Industry standard baseline</li>
+                    </ul>
+                </div>
+                <div class="model-card">
+                    <h3>Gradient Boosting</h3>
+                    <ul class="model-features">
+                        <li>✓ Sequential tree building</li>
+                        <li>✓ Error minimization</li>
+                        <li>✓ High predictive power</li>
+                        <li>✓ Kaggle competition winner</li>
+                    </ul>
+                </div>
+                <div class="model-card">
+                    <h3>ExtraTrees</h3>
+                    <ul class="model-features">
+                        <li>✓ Extremely randomized trees</li>
+                        <li>✓ Random split selection</li>
+                        <li>✓ Reduced variance</li>
+                        <li>✓ Fast training</li>
+                    </ul>
+                </div>
+                <div class="model-card">
+                    <h3>Lasso / Ridge</h3>
+                    <ul class="model-features">
+                        <li>✓ Linear regression baseline</li>
+                        <li>✓ L1/L2 regularization</li>
+                        <li>✓ Feature selection (Lasso)</li>
+                        <li>✓ Interpretable coefficients</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container-wide">
+            <p>&copy; 2024 RLT Research Platform. Based on Zhu, Zeng & Kosorok (2015) - JASA</p>
+            <p>University Research Project</p>
+        </div>
+    </footer>
+</body>
+</html>

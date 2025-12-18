@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datasets - RLT Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-styles.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">🌲 RLT Platform</a>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/datasets" class="nav-link active">Datasets</a>
+                <a href="/insights" class="nav-link">Global Insights</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container-wide">
+            <h1>📊 Available Datasets</h1>
+            <p>Select a dataset to make predictions with all 5 ML models</p>
+        </div>
+    </div>
+
+    <!-- Datasets Grid -->
+    <section class="datasets-page-section">
+        <div class="container-wide">
+            <div class="datasets-page-grid">
+                {% for dataset_name, dataset_info in datasets.items() %}
+                <a href="/predict/{{ dataset_name }}" class="dataset-card-link">
+                    <div class="dataset-card-page">
+                        <div class="dataset-card-header">
+                            <div class="dataset-icon">
+                                {% if dataset_info.task_type == 'classification' %}🎯{% else %}📈{% endif %}
+                            </div>
+                            <div class="dataset-badge dataset-badge-{{ dataset_info.task_type }}">
+                                {{ dataset_info.task_type }}
+                            </div>
+                        </div>
+                        <h3 class="dataset-card-title">{{ dataset_name }}</h3>
+                        <div class="dataset-card-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">{{ dataset_info.n_samples }}</span>
+                                <span class="stat-label">Samples</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">{{ dataset_info.n_features }}</span>
+                                <span class="stat-label">Features</span>
+                            </div>
+                        </div>
+                        <p class="dataset-card-description">{{ dataset_info.description }}</p>
+                        <div class="dataset-card-footer">
+                            <span class="btn btn-small">Make Prediction →</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container-wide">
+            <p>&copy; 2024 RLT Research Platform</p>
+        </div>
+    </footer>
+</body>
+</html>

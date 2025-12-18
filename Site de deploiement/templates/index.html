@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLT Model Comparison - Plateforme de Recherche</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🌲 RLT Model Comparison Platform</h1>
+            <p class="subtitle">Plateforme de recherche pour comparer RLT avec Random Forest, Gradient Boosting, Lasso et ExtraTrees</p>
+        </header>
+
+        <!-- Section 1: Sélection du Dataset -->
+        <section class="section dataset-selection">
+            <h2>📊 Étape 1: Sélectionner un Dataset</h2>
+            <div id="datasets-list" class="datasets-grid">
+                <!-- Généré dynamiquement par JS -->
+            </div>
+            <div id="dataset-info" class="dataset-info hidden">
+                <h3>Informations sur le dataset</h3>
+                <div id="dataset-details"></div>
+            </div>
+        </section>
+
+        <!-- Section 2: Saisie des Features -->
+        <section id="features-section" class="section features-input hidden">
+            <h2>📝 Étape 2: Saisir les Features</h2>
+            <div class="action-buttons">
+                <button id="random-fill-btn" class="btn btn-secondary">🎲 Remplissage Aléatoire Intelligent</button>
+                <button id="clear-form-btn" class="btn btn-danger">🗑️ Effacer</button>
+            </div>
+            <form id="features-form">
+                <div id="features-inputs" class="features-grid">
+                    <!-- Généré dynamiquement par JS -->
+                </div>
+                <button type="submit" class="btn btn-primary">🚀 Comparer les Modèles</button>
+            </form>
+        </section>
+
+        <!-- Section 3: Résultats des Prédictions -->
+        <section id="results-section" class="section results hidden">
+            <h2>📈 Étape 3: Résultats Comparatifs</h2>
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Calcul des prédictions en cours...</p>
+            </div>
+            <div id="results-content" class="results-content">
+                <!-- Généré dynamiquement par JS -->
+            </div>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
