@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # ML API Service
+  ml-api:
+    build: .
+    container_name: ml-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./models:/app/models
+      - ./logs:/app/logs
+      - ./metrics:/app/metrics
+    environment:
+      - FLASK_ENV=production
+      - MODEL_PATH=/app/models/best_model.pkl
+    networks:
+      - ml-network
+    restart: unless-stopped
+
+  # Streamlit Dashboard
+  dashboard:
+    build: .
+    container_name: ml-dashboard
+    command: streamlit run dashboard/app.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./metrics:/app/metrics
+      - ./models:/app/models
+    networks:
+      - ml-network
+    depends_on:
+      - ml-api
+    restart: unless-stopped
+
+  # MLflow Tracking Server
+  mlflow:
+    image: python:3.9-slim
+    container_name: mlflow-server
+    command: >
+      sh -c "pip install mlflow && 
+             mlflow server 
+             --backend-store-uri sqlite:///mlflow.db 
+             --default-artifact-root /mlruns 
+             --host 0.0.0.0 
+             --port 5001"
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./mlruns:/mlruns
+      - mlflow-data:/mlflow
+    networks:
+      - ml-network
+    restart: unless-stopped
+
+  # Prometheus for Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - ml-network
+    restart: unless-stopped
+
+networks:
+  ml-network:
+    driver: bridge
+
+volumes:
+  mlflow-data:
+  prometheus-data:
