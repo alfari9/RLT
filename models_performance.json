@@ -1,0 +1,307 @@
+{
+  "breast_cancer": {
+    "task_type": "classification",
+    "n_samples": 569,
+    "n_features": 30,
+    "models": {
+      "RLT": {
+        "accuracy": 0.9415204678362573,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "accuracy": 0.9298245614035088
+      },
+      "Logistic Ridge": {
+        "accuracy": 0.9883040935672515
+      },
+      "Gradient Boosting": {
+        "accuracy": 0.9298245614035088
+      },
+      "ExtraTrees": {
+        "accuracy": 0.9181286549707602
+      }
+    }
+  },
+  "boston_housing": {
+    "task_type": "regression",
+    "n_samples": 506,
+    "n_features": 13,
+    "models": {
+      "RLT": {
+        "mse": 16.696509294622235,
+        "r2": 0.7759251690273028,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "mse": 14.996267351186374,
+        "r2": 0.7987431975963517
+      },
+      "Lasso": {
+        "mse": 26.53247831235902,
+        "r2": 0.6439219427114921
+      },
+      "Gradient Boosting": {
+        "mse": 21.31584723961886,
+        "r2": 0.7139315300596492
+      },
+      "ExtraTrees": {
+        "mse": 19.32258833951303,
+        "r2": 0.7406819809020835
+      }
+    }
+  },
+  "parkinsons": {
+    "task_type": "classification",
+    "n_samples": 195,
+    "n_features": 22,
+    "models": {
+      "RLT": {
+        "accuracy": 0.8983050847457628,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "accuracy": 0.8983050847457628
+      },
+      "Logistic Ridge": {
+        "accuracy": 0.847457627118644
+      },
+      "Gradient Boosting": {
+        "accuracy": 0.8305084745762712
+      },
+      "ExtraTrees": {
+        "accuracy": 0.864406779661017
+      }
+    }
+  },
+  "sonar": {
+    "task_type": "classification",
+    "n_samples": 207,
+    "n_features": 60,
+    "models": {
+      "RLT": {
+        "accuracy": 0.7777777777777778,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "accuracy": 0.746031746031746
+      },
+      "Logistic Ridge": {
+        "accuracy": 0.6825396825396826
+      },
+      "Gradient Boosting": {
+        "accuracy": 0.7142857142857143
+      },
+      "ExtraTrees": {
+        "accuracy": 0.7936507936507936
+      }
+    }
+  },
+  "white_wine_quality": {
+    "task_type": "regression",
+    "n_samples": 4898,
+    "n_features": 11,
+    "models": {
+      "RLT": {
+        "mse": 0.5392300210544194,
+        "r2": 0.2858184752670655,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "mse": 0.535093671480879,
+        "r2": 0.29129685059839994
+      },
+      "Lasso": {
+        "mse": 0.7559094843630426,
+        "r2": -0.0011619661806652193
+      },
+      "Gradient Boosting": {
+        "mse": 0.5557684470736205,
+        "r2": 0.26391420834962
+      },
+      "ExtraTrees": {
+        "mse": 0.5723641505853985,
+        "r2": 0.24193408043522624
+      }
+    }
+  },
+  "red_wine_quality": {
+    "task_type": "regression",
+    "n_samples": 1599,
+    "n_features": 11,
+    "models": {
+      "RLT": {
+        "mse": 0.4260118729838929,
+        "r2": 0.3280818219217757,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "mse": 0.44265082202418604,
+        "r2": 0.3018383929629005
+      },
+      "Lasso": {
+        "mse": 0.6362105042802004,
+        "r2": -0.0034495046252929207
+      },
+      "Gradient Boosting": {
+        "mse": 0.45434707331228386,
+        "r2": 0.28339072904969087
+      },
+      "ExtraTrees": {
+        "mse": 0.44727155401620017,
+        "r2": 0.2945504415738571
+      }
+    }
+  },
+  "parkinson_oxford": {
+    "task_type": "regression",
+    "n_samples": 5875,
+    "n_features": 16,
+    "models": {
+      "RLT": {
+        "mse": 97.77595372149784,
+        "r2": 0.13072799753900288,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "mse": 98.09568236971688,
+        "r2": 0.1278854667151853
+      },
+      "Lasso": {
+        "mse": 108.36107303878094,
+        "r2": 0.036621547895646755
+      },
+      "Gradient Boosting": {
+        "mse": 98.30098928779584,
+        "r2": 0.126060196298433
+      },
+      "ExtraTrees": {
+        "mse": 102.60876770535424,
+        "r2": 0.08776211759233987
+      }
+    }
+  },
+  "ozone": {
+    "task_type": "regression",
+    "n_samples": 1846,
+    "n_features": 19,
+    "models": {
+      "RLT": {
+        "mse": 0.363310416801146,
+        "r2": 0.7606213358008012,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "mse": 0.3784334154711938,
+        "r2": 0.7506570654333381
+      },
+      "Lasso": {
+        "mse": 1.4270593305449313,
+        "r2": 0.059736411395482136
+      },
+      "Gradient Boosting": {
+        "mse": 0.5245019804335748,
+        "r2": 0.6544151292123715
+      },
+      "ExtraTrees": {
+        "mse": 0.4275874132309759,
+        "r2": 0.7182703851190566
+      }
+    }
+  },
+  "concrete_strength": {
+    "task_type": "regression",
+    "n_samples": 1030,
+    "n_features": 8,
+    "models": {
+      "RLT": {
+        "mse": 84.04351848090997,
+        "r2": 0.6893883530576042,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "mse": 90.80074923697536,
+        "r2": 0.664414689271883
+      },
+      "Lasso": {
+        "mse": 124.93735293091298,
+        "r2": 0.5382511624937614
+      },
+      "Gradient Boosting": {
+        "mse": 112.11242269018814,
+        "r2": 0.5856500907632594
+      },
+      "ExtraTrees": {
+        "mse": 122.42630557023966,
+        "r2": 0.5475315992287639
+      }
+    }
+  },
+  "auto_mpg": {
+    "task_type": "regression",
+    "n_samples": 392,
+    "n_features": 8,
+    "models": {
+      "RLT": {
+        "mse": 9.676666432412384,
+        "r2": 0.8170929483986662,
+        "config": {
+          "k": 5,
+          "muting": "aggressive",
+          "muting_rate": 0.5
+        }
+      },
+      "Random Forest": {
+        "mse": 8.3049537436654,
+        "r2": 0.8430208777424393
+      },
+      "Lasso": {
+        "mse": 10.166425350613602,
+        "r2": 0.8078355909864492
+      },
+      "Gradient Boosting": {
+        "mse": 13.060114370353826,
+        "r2": 0.7531394690782881
+      },
+      "ExtraTrees": {
+        "mse": 10.477237732812037,
+        "r2": 0.8019606570072555
+      }
+    }
+  }
+}
