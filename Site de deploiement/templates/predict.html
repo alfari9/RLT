@@ -6,6 +6,7 @@
     <title>Predict - {{ dataset }} - RLT Platform</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
 </head>
 <body>
     <!-- Navigation -->
@@ -83,5 +84,6 @@
         const DATASET_NAME = "{{ dataset }}";
     </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
 </body>
 </html>

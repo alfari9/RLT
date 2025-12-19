@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h1>🧪 Test du Chatbot</h1>
+        <p>Cette page teste le chatbot. Le bouton devrait apparaître en bas à droite.</p>
+        <button onclick="testChatbot()">🔍 Vérifier si le chatbot est chargé</button>
+        <div id="debug-info" style="margin-top: 20px; padding: 10px; background: #f9f9f9; border-radius: 4px;"></div>
+    </div>
+
+    <script>
+        function testChatbot() {
+            const debugDiv = document.getElementById('debug-info');
+            const button = document.getElementById('chatbot-toggle');
+            const container = document.getElementById('chatbot-container');
+            
+            let info = '<h3>Informations de débogage :</h3>';
+            info += '<p><strong>Bouton chatbot trouvé :</strong> ' + (button ? '✅ Oui' : '❌ Non') + '</p>';
+            info += '<p><strong>Conteneur chatbot trouvé :</strong> ' + (container ? '✅ Oui' : '❌ Non') + '</p>';
+            info += '<p><strong>window.chatbot existe :</strong> ' + (window.chatbot ? '✅ Oui' : '❌ Non') + '</p>';
+            
+            if (button) {
+                info += '<p><strong>Position du bouton :</strong> ' + button.style.position + '</p>';
+                info += '<p><strong>Visible :</strong> ' + (button.offsetHeight > 0 ? '✅ Oui' : '❌ Non') + '</p>';
+            }
+            
+            debugDiv.innerHTML = info;
+        }
+        
+        // Auto-test après 1 seconde
+        setTimeout(testChatbot, 1000);
+    </script>
+    
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+</body>
+</html>
