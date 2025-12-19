@@ -1404,5 +1404,56 @@
       "std": 0.9895496061209682,
       "distribution": "normal"
     }
+  },
+  "auto_insurance": {
+    "customer_lifetime_value": {
+      "min": -0.9047443052360011,
+      "max": 11.21630025299556,
+      "mean": 0.004316141975075097,
+      "std": 1.0227924706882299,
+      "distribution": "normal"
+    },
+    "income": {
+      "min": -1.2484238908819183,
+      "max": 2.0597793452761124,
+      "mean": -0.002404483092362828,
+      "std": 1.0052199833436655,
+      "distribution": "normal"
+    },
+    "monthly_premium_auto": {
+      "min": -0.9368123501503391,
+      "max": 5.92338755424559,
+      "mean": -0.004193050411254158,
+      "std": 0.9959727193012161,
+      "distribution": "normal"
+    },
+    "months_since_last_claim": {
+      "min": -1.493305935861255,
+      "max": 1.9679382598650557,
+      "mean": -0.0003229535537843253,
+      "std": 0.9961714525657194,
+      "distribution": "normal"
+    },
+    "months_since_policy_inception": {
+      "min": -1.7229891840613423,
+      "max": 1.8315679370575837,
+      "mean": 0.0027516670022531197,
+      "std": 1.0019539218594842,
+      "distribution": "normal"
+    },
+    "number_of_open_complaints": {
+      "min": -0.4163683105037089,
+      "max": 5.002692375673431,
+      "mean": 0.00023607025319799475,
+      "std": 0.9866847211020346,
+      "distribution": "normal"
+    },
+    "number_of_policies": {
+      "min": -0.827900245175487,
+      "max": 2.506650876202297,
+      "mean": -0.00836330094481553,
+      "std": 0.9962729292294631,
+      "distribution": "normal"
+    }
   }
 }
