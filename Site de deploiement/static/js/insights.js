@@ -47,13 +47,14 @@ function createPerformanceChart() {
     models.forEach((model, idx) => {
         const data = datasetNames.map(dataset => {
             const perf = PERFORMANCE_DATA[dataset];
-            if (!perf || !perf.models || !perf.models[model]) return null;
+            if (!perf || !perf[model]) return null;
             
             // Use accuracy for classification, R² for regression
-            if (perf.task_type === 'classification') {
-                return perf.models[model].accuracy * 100;
+            const taskType = DATASETS_INFO[DATASET_FOLDER_NAMES[dataset]]?.task_type;
+            if (taskType === 'classification' || perf[model].accuracy !== undefined) {
+                return (perf[model].accuracy || 0) * 100;
             } else {
-                return perf.models[model].r2 * 100;
+                return (perf[model].r2_score || 0) * 100;
             }
         });
         
@@ -178,30 +179,32 @@ function createPerformanceTable() {
         const perf = PERFORMANCE_DATA[dataset];
         const row = document.createElement('tr');
         
-        const taskBadge = perf.task_type === 'classification'
+        // Determine task type from data
+        const taskType = perf.RLT && perf.RLT.accuracy !== undefined ? 'classification' : 'regression';
+        const taskBadge = taskType === 'classification'
             ? '<span class="dataset-badge dataset-badge-classification">Classification</span>'
             : '<span class="dataset-badge dataset-badge-regression">Regression</span>';
         
         let cells = `<td><strong>${dataset}</strong></td><td>${taskBadge}</td>`;
         
-        const models = ['RLT', 'Random Forest', 'Gradient Boosting', 'ExtraTrees'];
+        const models = ['RLT', 'RandomForest', 'GradientBoosting', 'ExtraTrees'];
         
         // Add Lasso/Ridge based on task type
-        if (perf.task_type === 'classification') {
-            models.push('Logistic Ridge');
+        if (taskType === 'classification') {
+            models.push('LogisticRidge');
         } else {
             models.push('Lasso');
         }
         
         models.forEach(model => {
-            if (perf.models && perf.models[model]) {
-                const modelPerf = perf.models[model];
+            if (perf[model]) {
+                const modelPerf = perf[model];
                 let value = '';
                 
-                if (perf.task_type === 'classification') {
+                if (taskType === 'classification') {
                     value = `${(modelPerf.accuracy * 100).toFixed(2)}%`;
                 } else {
-                    value = `R²: ${(modelPerf.r2 * 100).toFixed(2)}%`;
+                    value = `R²: ${(modelPerf.r2_score * 100).toFixed(2)}%`;
                 }
                 
                 cells += `<td style="text-align: center;">${value}</td>`;
@@ -221,24 +224,23 @@ function createWinRateChart() {
     // Count wins per model
     const wins = {
         'RLT': 0,
-        'Random Forest': 0,
-        'Gradient Boosting': 0,
+        'RandomForest': 0,
+        'GradientBoosting': 0,
         'ExtraTrees': 0,
-        'Lasso/Ridge': 0
+        'Lasso': 0
     };
     
     for (const dataset in PERFORMANCE_DATA) {
         const perf = PERFORMANCE_DATA[dataset];
-        if (!perf.models) continue;
         
         let bestScore = -Infinity;
         let bestModel = null;
         
-        for (const model in perf.models) {
-            const modelPerf = perf.models[model];
-            const score = perf.task_type === 'classification' 
+        for (const model in perf) {
+            const modelPerf = perf[model];
+            const score = modelPerf.accuracy !== undefined 
                 ? modelPerf.accuracy 
-                : modelPerf.r2;
+                : modelPerf.r2_score;
             
             if (score > bestScore) {
                 bestScore = score;
@@ -246,13 +248,8 @@ function createWinRateChart() {
             }
         }
         
-        if (bestModel) {
-            // Map Ridge/Lasso to combined category
-            if (bestModel === 'Logistic Ridge' || bestModel === 'Lasso') {
-                wins['Lasso/Ridge']++;
-            } else {
-                wins[bestModel]++;
-            }
+        if (bestModel && wins[bestModel] !== undefined) {
+            wins[bestModel]++;
         }
     }
     
@@ -383,7 +380,9 @@ function createPerformanceDistributions() {
     const regDatasets = {};
     
     for (const dataset in PERFORMANCE_DATA) {
-        if (PERFORMANCE_DATA[dataset].task_type === 'classification') {
+        // Determine task type from the data structure
+        const hasAccuracy = PERFORMANCE_DATA[dataset].RLT && PERFORMANCE_DATA[dataset].RLT.accuracy !== undefined;
+        if (hasAccuracy) {
             classDatasets[dataset] = PERFORMANCE_DATA[dataset];
         } else {
             regDatasets[dataset] = PERFORMANCE_DATA[dataset];
@@ -391,13 +390,13 @@ function createPerformanceDistributions() {
     }
     
     // Classification chart
-    const classModels = ['RLT', 'Random Forest', 'Gradient Boosting'];
+    const classModels = ['RLT', 'RandomForest', 'GradientBoosting'];
     const classData = {
         labels: Object.keys(classDatasets).map(ds => ds.replace(/_/g, ' ')),
         datasets: classModels.map((model, idx) => ({
             label: model,
             data: Object.keys(classDatasets).map(ds => {
-                const perf = classDatasets[ds].models && classDatasets[ds].models[model];
+                const perf = classDatasets[ds][model];
                 return perf ? perf.accuracy * 100 : null;
             }),
             backgroundColor: idx === 0 ? 'rgba(91, 33, 182, 0.6)' : idx === 1 ? 'rgba(5, 150, 105, 0.6)' : 'rgba(6, 182, 212, 0.6)'
@@ -420,14 +419,14 @@ function createPerformanceDistributions() {
     });
     
     // Regression chart
-    const regModels = ['RLT', 'Random Forest', 'Lasso'];
+    const regModels = ['RLT', 'RandomForest', 'Lasso'];
     const regData = {
         labels: Object.keys(regDatasets).map(ds => ds.replace(/_/g, ' ')),
         datasets: regModels.map((model, idx) => ({
             label: model,
             data: Object.keys(regDatasets).map(ds => {
-                const perf = regDatasets[ds].models && regDatasets[ds].models[model];
-                return perf ? perf.r2 * 100 : null;
+                const perf = regDatasets[ds][model];
+                return perf ? perf.r2_score * 100 : null;
             }),
             backgroundColor: idx === 0 ? 'rgba(91, 33, 182, 0.6)' : idx === 1 ? 'rgba(5, 150, 105, 0.6)' : 'rgba(245, 158, 11, 0.6)'
         }))
@@ -452,13 +451,13 @@ function createPerformanceDistributions() {
 function createPerformanceHeatmap() {
     const ctx = document.getElementById('performanceHeatmap').getContext('2d');
     const datasets = Object.keys(PERFORMANCE_DATA);
-    const models = ['RLT', 'Random Forest', 'Gradient Boosting', 'ExtraTrees'];
+    const models = ['RLT', 'RandomForest', 'GradientBoosting', 'ExtraTrees'];
     const heatmapData = datasets.flatMap((dataset, y) =>
         models.map((model, x) => {
             const perf = PERFORMANCE_DATA[dataset];
-            if (perf.models && perf.models[model]) {
-                const value = perf.task_type === 'classification' ?
-                    perf.models[model].accuracy * 100 : perf.models[model].r2 * 100;
+            if (perf[model]) {
+                const value = perf[model].accuracy !== undefined ?
+                    perf[model].accuracy * 100 : perf[model].r2_score * 100;
                 return { x: x, y: y, v: value };
             }
             return { x: x, y: y, v: 0 };
